@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://192.168.145.128:3306/gulimall_sms
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      # 以下配置项必须填写
+      username: nacos
+      password: nacos
+
+  application:
+    name: gulimall-coupon
+
+  config:
+    import:
+      - nacos:nacos-config-example.properties?refreshEnabled=true&group=DEFAULT_GROUP
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+
+server:
+  port: 7000
