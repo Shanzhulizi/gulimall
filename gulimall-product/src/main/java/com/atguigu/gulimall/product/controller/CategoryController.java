@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -32,14 +33,13 @@ public class CategoryController {
     private CategoryService categoryService;
 
     /**
-     * 列表
+     * 查出所有分类以及子分类，以树形结构组装起来
      */
-    @RequestMapping("/list")
-//    @RequiresPermissions("product:category:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryService.queryPage(params);
+    @RequestMapping("/list/tree")
+    public R list(){
+        List<CategoryEntity> entities= categoryService.listWithTree();
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", entities);
     }
 
 
@@ -82,7 +82,11 @@ public class CategoryController {
     @RequestMapping("/delete")
 //    @RequiresPermissions("product:category:delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+
+        //检查当前删除的菜单是否被其他地方引用
+        categoryService.removeMenuByIds(Arrays.asList(catIds));
+
+//		categoryService.removeByIds(Arrays.asList(catIds));
 
         return R.ok();
     }
